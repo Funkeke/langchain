@@ -41,10 +41,10 @@ class DashVector(VectorStore):
     """
 
     def __init__(
-        self,
-        collection: Any,
-        embedding: Embeddings,
-        text_field: str,
+            self,
+            collection: Any,
+            embedding: Embeddings,
+            text_field: str,
     ):
         """Initialize with DashVector collection."""
 
@@ -67,10 +67,10 @@ class DashVector(VectorStore):
         self._text_field = text_field
 
     def _similarity_search_with_score_by_vector(
-        self,
-        embedding: List[float],
-        k: int = 4,
-        filter: Optional[str] = None,
+            self,
+            embedding: List[float],
+            k: int = 4,
+            filter: Optional[str] = None,
     ) -> List[Tuple[Document, float]]:
         """Return docs most similar to query vector, along with scores"""
 
@@ -90,12 +90,12 @@ class DashVector(VectorStore):
         return docs
 
     def add_texts(
-        self,
-        texts: Iterable[str],
-        metadatas: Optional[List[dict]] = None,
-        ids: Optional[List[str]] = None,
-        batch_size: int = 25,
-        **kwargs: Any,
+            self,
+            texts: Iterable[str],
+            metadatas: Optional[List[dict]] = None,
+            ids: Optional[List[str]] = None,
+            batch_size: int = 25,
+            **kwargs: Any,
     ) -> List[str]:
         """Run more texts through the embeddings and add to the vectorstore.
 
@@ -150,11 +150,11 @@ class DashVector(VectorStore):
         return bool(self._collection.delete(ids))
 
     def similarity_search(
-        self,
-        query: str,
-        k: int = 4,
-        filter: Optional[str] = None,
-        **kwargs: Any,
+            self,
+            query: str,
+            k: int = 4,
+            filter: Optional[str] = None,
+            **kwargs: Any,
     ) -> List[Document]:
         """Return docs most similar to query.
 
@@ -172,11 +172,11 @@ class DashVector(VectorStore):
         return [doc for doc, _ in docs_and_scores]
 
     def similarity_search_with_relevance_scores(
-        self,
-        query: str,
-        k: int = 4,
-        filter: Optional[str] = None,
-        **kwargs: Any,
+            self,
+            query: str,
+            k: int = 4,
+            filter: Optional[str] = None,
+            **kwargs: Any,
     ) -> List[Tuple[Document, float]]:
         """Return docs most similar to query text , alone with relevance scores.
 
@@ -198,11 +198,11 @@ class DashVector(VectorStore):
         )
 
     def similarity_search_by_vector(
-        self,
-        embedding: List[float],
-        k: int = 4,
-        filter: Optional[str] = None,
-        **kwargs: Any,
+            self,
+            embedding: List[float],
+            k: int = 4,
+            filter: Optional[str] = None,
+            **kwargs: Any,
     ) -> List[Document]:
         """Return docs most similar to embedding vector.
 
@@ -221,13 +221,13 @@ class DashVector(VectorStore):
         return [doc for doc, _ in docs_and_scores]
 
     def max_marginal_relevance_search(
-        self,
-        query: str,
-        k: int = 4,
-        fetch_k: int = 20,
-        lambda_mult: float = 0.5,
-        filter: Optional[dict] = None,
-        **kwargs: Any,
+            self,
+            query: str,
+            k: int = 4,
+            fetch_k: int = 20,
+            lambda_mult: float = 0.5,
+            filter: Optional[dict] = None,
+            **kwargs: Any,
     ) -> List[Document]:
         """Return docs selected using the maximal marginal relevance.
 
@@ -254,13 +254,13 @@ class DashVector(VectorStore):
         )
 
     def max_marginal_relevance_search_by_vector(
-        self,
-        embedding: List[float],
-        k: int = 4,
-        fetch_k: int = 20,
-        lambda_mult: float = 0.5,
-        filter: Optional[dict] = None,
-        **kwargs: Any,
+            self,
+            embedding: List[float],
+            k: int = 4,
+            fetch_k: int = 20,
+            lambda_mult: float = 0.5,
+            filter: Optional[dict] = None,
+            **kwargs: Any,
     ) -> List[Document]:
         """Return docs selected using the maximal marginal relevance.
 
@@ -304,17 +304,18 @@ class DashVector(VectorStore):
 
     @classmethod
     def from_texts(
-        cls,
-        texts: List[str],
-        embedding: Embeddings,
-        metadatas: Optional[List[dict]] = None,
-        dashvector_api_key: Optional[str] = None,
-        dashvector_endpoint: Optional[str] = None,
-        collection_name: str = "langchain",
-        text_field: str = "text",
-        batch_size: int = 25,
-        ids: Optional[List[str]] = None,
-        **kwargs: Any,
+            cls,
+            texts: List[str],
+            embedding: Embeddings,
+            drop_old: Optional[bool] = False,
+            metadatas: Optional[List[dict]] = None,
+            dashvector_api_key: Optional[str] = None,
+            dashvector_endpoint: Optional[str] = None,
+            collection_name: str = "langchain",
+            text_field: str = "text",
+            batch_size: int = 25,
+            ids: Optional[List[str]] = None,
+            **kwargs: Any,
     ) -> DashVector:
         """Return DashVector VectorStore initialized from texts and embeddings.
 
@@ -354,7 +355,8 @@ class DashVector(VectorStore):
         dashvector_client = dashvector.Client(
             api_key=dashvector_api_key, endpoint=dashvector_endpoint
         )
-        dashvector_client.delete(collection_name)
+        if drop_old:
+            dashvector_client.delete(collection_name)
         collection = dashvector_client.get(collection_name)
         if not collection:
             dim = len(embedding.embed_query(texts[0]))
